@@ -1,0 +1,31 @@
+{
+  "manifest_version": 2,
+  "name": "url-adder",
+  "version": "1.0",
+  "description": "add url as keys",
+  "permissions": ["tabs", "activeTab","storage","file://*/*"],
+  
+  "background": {
+    "scripts": ["background.js"],
+	"persistent": false
+  },
+
+  "applications": {
+    "gecko": {
+      "id": "url-adder@mavihs.com"
+    }
+  },
+  
+  "browser_action": {
+    "default_icon": {
+      "16": "icons/add-16.svg",
+      "32": "icons/add-32.svg"
+    }
+  },
+  
+  "icons": {
+    "48": "icons/add.svg"
+  },
+
+  "content_security_policy": "script-src 'self'; object-src 'self'"
+}
