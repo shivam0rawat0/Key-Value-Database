@@ -81,7 +81,7 @@ public class HashTable {
         if(entryIndex==0){
             Node trav = table[index];
             if(trav.next==null){
-                table[index].next =null;
+                table[index] = null;
             } else {
                 while (trav.next.next != null) {
                     trav = trav.next;

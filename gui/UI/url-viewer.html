@@ -1,0 +1,133 @@
+<html>
+<style>
+    .auto-scr{
+        position: fixed;
+        height: 98%;
+        width: 46%;
+        display: inline-block;
+        border: 0.5px solid black;
+        overflow: auto;
+    }
+
+    #active {
+        background-color: rgb(170, 243, 243);
+        top: 2%;
+        left: 2%;
+        
+    }
+
+    #done {
+        background-color: rgb(149, 244, 155);
+        top: 2%;
+        left: 52%;
+    }
+
+    .btn {
+        position: relative;
+        color:white;
+        padding-bottom:6px;
+        padding:4px;
+        margin:4px;
+        background-color: black;
+        height: 10%;
+        width: 90%;
+        left: 2%;
+        border: 2px solid rgb(135, 132, 132);
+        border-radius:5px;
+    }
+
+    .opt-btn {
+		position: absolute;
+        color:white;
+        margin-left:4px;
+        margin-right:4px;
+        border: 1px solid rgb(135, 132, 132);
+        border-radius:5px;
+		right: 10px;
+    }
+	
+    .active{
+        background-color:rgb(15, 172, 23);
+    }
+</style>
+<script src="script/network.js"></script>
+<script src="script/element.js"></script>
+<script type="text/javascript">
+    var Active,Done,Key;
+
+    function render(parent,child){
+        parent.appendChild(child);
+    }
+
+    function load() {
+        Active = document.getElementById("active");
+        Done = document.getElementById("done");
+        resource("GET","http://localhost:3040/active/getKeys",null,populateListActive);
+        resource("GET","http://localhost:3040/done/getKeys",null,populateListDone);
+    }
+
+    function goto(keySpace,key){
+		var postData = JSON.stringify({"key":key,"value":""});
+		resource("POST","http://localhost:3040/"+keySpace+"/getKey",postData,reload);    
+    }
+	
+	function reload(url){
+		window.open(url);
+	}
+	
+	function process(entry,key){
+        event.stopPropagation();
+		if(prompt("Done \n"+key)=="yes"){
+			Key = key;
+			var postData = JSON.stringify({"key":key,"value":""});
+			resource("POST","http://localhost:3040/active/getKey",postData,toggleKey);
+			Active.removeChild(entry);
+		}
+    }
+	
+	function toggleKey(value){
+		var postData = JSON.stringify({"key":Key,"value":value});
+		resource("POST","http://localhost:3040/done/setKey",postData,console.log);
+		resource("DELETE","http://localhost:3040/active/deleteKey",postData,console.log);
+		var entry = $("div",["class=primary btn","onclick=goto('done','"+Key+"')"])
+                        .add($("h4",["innerHTML="+Key]))
+                        .get();
+		render(Done,entry);
+	}
+	
+    function populateListActive(data){
+        data = JSON.parse(data);
+        for(item in data){
+            var entry = $("div",["class=primary btn","onclick=goto('active','"+data[item]+"')"])
+                        .add($("text",["innerHTML="+data[item]]))
+                        .add($("button",
+                            [
+                                "class=opt-btn active",
+                                "onclick=process(this.parentElement,'"+data[item]+"')",
+                                "innerHTML=✔️"
+                            ]))
+                        .get();
+            render(Active,entry);
+        }    
+    }
+    
+    function populateListDone(data){  
+        data = JSON.parse(data);
+        for(item in data){
+            var entry = $("div",["class=primary btn","onclick=goto('done','"+data[item]+"')"])
+                        .add($("h4",["innerHTML="+data[item]]))
+                        .get();
+            render(Done,entry);
+        }   
+    }
+</script>
+
+<body onload="load()">
+    <div id="active" class="auto-scr">
+		<h1 align="center">Active</h1>
+    </div>
+    <div id="done" class="auto-scr">
+		<h1 align="center">In-Active</h1>
+	</div>
+</body>
+</html>
