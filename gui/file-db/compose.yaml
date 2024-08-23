@@ -1,0 +1,29 @@
+services:
+  active:
+    image: keydb
+    volumes:
+      - index-db:/tmp/master/
+    ports:
+      - "3040:3040"
+    networks:
+      - back-tier
+  raid0:
+    image: keydb-raid
+    volumes:
+      - index-db:/tmp/raid/
+    networks:
+      - back-tier
+  raid1:
+    image: keydb-raid1
+    volumes:
+      - index-db:/tmp/raid1/
+    networks:
+      - back-tier
+   
+networks:
+  back-tier: {}
+  
+volumes:
+  index-db:
+    external: true
+    name: index-db
