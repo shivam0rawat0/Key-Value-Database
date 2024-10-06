@@ -27,15 +27,15 @@ Below HTTP end-points have been defined to access the database
    will get a list of all the keys in the database.
 
 2. <code>POST http:/localhost:3040/{database-name}/getKey</code><br/>
-   Request body <code>{"key":"key1","value",""}</code><br/>
+   Request body <code>{"key":"key1","value":""}</code><br/>
    will get the value of the key.
 
 3. <code>POST http:/localhost:3040/{database-name}/setKey</code><br/>
-   Request body <code>{"key":"key1","value","value1"}</code><br/>
+   Request body <code>{"key":"key1","value":"value1"}</code><br/>
    will save the key-value pair.
    
 4. <code>DELETE http:/localhost:3040/{database-name}/deleteKey</code><br/>
-   Request body <code>{"key":"key1","value",""}</code><br/>
+   Request body <code>{"key":"key1","value":""}</code><br/>
    will delete the key-value pair.
 
 
